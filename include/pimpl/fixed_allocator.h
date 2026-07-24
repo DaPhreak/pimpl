@@ -1,7 +1,6 @@
 #pragma once
 
-#include <assert.h>
-
+#include <cassert>
 #include <cstddef>
 #include <new>
 #include <type_traits>
@@ -12,10 +11,19 @@ template <class T,size_t MaxSpace,size_t Align=alignof(std::max_align_t)>
 class fixed_allocator {
 public:
 
-    using value_type = T;
-    using size_type = std::size_t;
+    using value_type      = T;
+    using pointer         = T*;
+    using const_pointer   = T const*;
+
+    using reference       = T&;
+    using const_reference = T const&;
+
+    using size_type       = std::size_t;
     using difference_type = std::ptrdiff_t;
+
     using propagate_on_container_move_assignment = std::true_type;
+    using is_always_equal = std::false_type;
+    
     using allocation_free = std::true_type;
 
     constexpr fixed_allocator () noexcept {}
@@ -45,7 +53,7 @@ public:
 
 private:
 
-    alignas(Align) std::byte mStorage[MaxSpace]{};
+    alignas(Align) std::byte mStorage[MaxSpace];
 
 };
 
