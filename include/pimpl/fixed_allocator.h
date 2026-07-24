@@ -36,7 +36,7 @@ public:
     [[nodiscard]] constexpr T const* allocate(const size_t Count) const noexcept
     {
         static_assert(sizeof(value_type) > 0, "value_type must be complete before calling allocate.");
-        assert( sizeof(value_type) * Count < sizeof(mStorage) );
+        assert( sizeof(value_type) * Count <= sizeof(mStorage) );
         return std::launder(reinterpret_cast<T const*>(mStorage));
     }
 
