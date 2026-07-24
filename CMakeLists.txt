@@ -8,6 +8,8 @@ project( fast_pimpl
 
 set( HEADERS
     include/fast_pimpl/fast_pimpl.h
+    include/fast_pimpl/fixed_allocator.h
+    include/fast_pimpl/pimpl.h
 )
 
 add_library( ${PROJECT_NAME} INTERFACE

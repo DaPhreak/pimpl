@@ -1,3 +1,4 @@
+#include "fast_pimpl/pimpl.h"
 #include "fast_pimpl/fast_pimpl.h"
 #include "pimpl.h"
 
@@ -22,7 +23,7 @@ TEST_CASE("Test fast pimpl", "[fast_pimpl]")
     REQUIRE( *s == "x" );
 
     {
-        T cpy{ s }; 
+        T cpy{ s };
 
         REQUIRE( *s == *cpy );
 
@@ -36,6 +37,31 @@ TEST_CASE("Test fast pimpl", "[fast_pimpl]")
 
 TEST_CASE("Test pimpl", "[fast_pimpl]")
 {
+    using T = phreak::pimpl<std::string>;
+
+    T s{"s"};
+
+    REQUIRE( *s == "s" );
+
+    s = "x";
+
+    REQUIRE( *s == "x" );
+
+    {
+        T cpy{ s };
+
+        REQUIRE( *s == *cpy );
+
+        cpy = std::move( s );
+
+        REQUIRE( *cpy == "x" );
+
+        REQUIRE( s->empty() ); // maybe (moved)...
+    }
+}
+
+TEST_CASE("Test TestPimpl", "[fast_pimpl]")
+{
     using T = TestPimpl;
 
     T s{"s"};
@@ -47,7 +73,7 @@ TEST_CASE("Test pimpl", "[fast_pimpl]")
     REQUIRE( s == "x" );
 
     {
-        T cpy{ s }; 
+        T cpy{ s };
 
         REQUIRE( s == cpy );
 
