@@ -1,7 +1,7 @@
 #pragma once
 
 #include <type_traits>
-#include <stdexcept>
+#include <assert.h>
 
 namespace phreak {
 
@@ -28,17 +28,15 @@ public:
         return *this;
     }
 
-    [[nodiscard]] constexpr T* allocate(const size_t Count)
+    [[nodiscard]] constexpr T* allocate(const size_t Count) noexcept
     {
         return const_cast<T*>(const_cast<fixed_allocator const&>(*this).allocate(Count));
     }
 
-    [[nodiscard]] constexpr T const* allocate(const size_t Count) const
+    [[nodiscard]] constexpr T const* allocate(const size_t Count) const noexcept
     {
         static_assert(sizeof(value_type) > 0, "value_type must be complete before calling allocate.");
-        if ( sizeof(value_type) * Count > sizeof(mStorage) ) {
-            throw std::runtime_error{ "allocation failed!" };
-        }
+        assert( sizeof(value_type) * Count < sizeof(mStorage) );
         return std::launder(reinterpret_cast<T const*>(mStorage));
     }
 
