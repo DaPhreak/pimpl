@@ -17,11 +17,6 @@ public:
 
     constexpr fixed_allocator () noexcept {}
     constexpr fixed_allocator (fixed_allocator const& S) noexcept {}
-    ~fixed_allocator () noexcept
-    {
-        static_assert(sizeof(T)<=sizeof(mStorage),"Size of T is too big!");
-        static_assert(alignof(T)<=Align,"Alignment of T is too big!");
-    }
 
     constexpr fixed_allocator& operator = (fixed_allocator const& S) noexcept
     {
@@ -36,7 +31,10 @@ public:
     [[nodiscard]] constexpr T const* allocate(const size_t Count) const noexcept
     {
         static_assert(sizeof(value_type) > 0, "value_type must be complete before calling allocate.");
-        assert( sizeof(value_type) * Count <= sizeof(mStorage) );
+        static_assert(sizeof(value_type) <= sizeof(mStorage),"size of value_type is too big!");
+        static_assert(alignof(value_type) <= Align,"alignment of value_type is too big!");
+        assert(sizeof(value_type) * Count <= sizeof(mStorage));
+
         return std::launder(reinterpret_cast<T const*>(mStorage));
     }
 
@@ -44,7 +42,7 @@ public:
 
 private:
 
-    alignas(Align) std::byte mStorage[MaxSpace];
+    alignas(Align) std::byte mStorage[MaxSpace]{};
 
 };
 
