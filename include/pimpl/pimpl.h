@@ -22,25 +22,25 @@ public:
     using pointer = T*;
     using const_pointer	= T const*;
 
-    pimpl ()
+    pimpl () noexcept(std::is_nothrow_constructible_v<T> && std::is_nothrow_constructible_v<holder_t>)
     {
         new(mHolder.data()) T{};
     }
 
-    pimpl (pimpl const& S)
+    pimpl (pimpl const& S) noexcept(std::is_nothrow_copy_constructible_v<T> && std::is_nothrow_copy_constructible_v<holder_t>)
     : mHolder{S.mHolder}
     {
         new(mHolder.data()) T{*S};
     }
 
-    pimpl (pimpl&& S) noexcept
+    pimpl (pimpl&& S) noexcept(std::is_nothrow_move_constructible_v<T> && std::is_nothrow_move_constructible_v<holder_t>)
     : mHolder{std::move(S.mHolder)}
     {
         new(mHolder.data()) T{std::move(*S)};
     }
 
     template <class U,class... Args,std::enable_if_t<!std::is_same_v<pimpl,std::decay_t<U>>>* = nullptr>
-    explicit pimpl (U&& arg0,Args&&... args)
+    explicit pimpl (U&& arg0,Args&&... args) noexcept(std::is_nothrow_constructible_v<T,U,Args...> && std::is_nothrow_constructible_v<holder_t>)
     {
         new(mHolder.data()) T(std::forward<U>(arg0),std::forward<Args>(args)...);
     }
