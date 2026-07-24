@@ -30,11 +30,7 @@ public:
 
     [[nodiscard]] constexpr T* allocate(const size_t Count)
     {
-        static_assert(sizeof(value_type) > 0, "value_type must be complete before calling allocate.");
-        if ( sizeof(value_type) * Count > sizeof(mStorage) ) {
-            throw std::runtime_error{ "allocation failed!" };
-        }
-        return std::launder(reinterpret_cast<T*>(mStorage));
+        return const_cast<T*>(const_cast<fixed_allocator const&>(*this).allocate(Count));
     }
 
     [[nodiscard]] constexpr T const* allocate(const size_t Count) const
