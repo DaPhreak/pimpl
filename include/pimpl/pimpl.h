@@ -91,7 +91,7 @@ public:
 
 private:
 
-    class no_alloc: public A {
+    class no_alloc: private A {
     public:
         no_alloc() noexcept
         {
@@ -115,7 +115,7 @@ private:
         };
     };
 
-    class compressed_pair: public A {
+    class compressed_pair: private A {
     public:
         compressed_pair() 
         : mData{this->allocate(1)}
