@@ -2,7 +2,6 @@
 
 #include <new>
 #include <memory>
-#include <tuple>
 #include <type_traits>
 
 namespace phreak {
