@@ -96,7 +96,7 @@ private:
     public:
         no_alloc() noexcept
         {
-            assert(this->allocate(1) == this->allocate(1));
+            assert(data() == data());
         }
         no_alloc(no_alloc const& S) noexcept
         : A{S}
