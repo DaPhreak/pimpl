@@ -27,4 +27,9 @@ target_include_directories( ${PROJECT_NAME}
         $<INSTALL_INTERFACE:include>
 )
 
+target_sources( ${PROJECT_NAME} 
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/pimpl/pimpl.natvis>
+)
+
 add_subdirectory( tests )

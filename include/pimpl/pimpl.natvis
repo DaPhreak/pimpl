@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+<Type Name="phreak::pimpl&lt;*&gt;">
+  <DisplayString>{mHolder}</DisplayString>
+  <Expand>
+    <Item Name="[value]">mHolder</Item>
+  </Expand>
+</Type>
+
+<Type Name="phreak::fixed_allocator&lt;*&gt;">
+  <DisplayString>{*($T1*)(mStorage)}</DisplayString>
+  <Expand>
+    <Item Name="[value]">*($T1*)(mStorage)</Item>
+  </Expand>
+</Type>
+
+<Type Name="phreak::pimpl&lt;*&gt;::compressed_pair">
+  <DisplayString>{*mData}</DisplayString>
+  <Expand>
+    <Item Name="[value]">*mData</Item>
+  </Expand>
+</Type>
+
+
+</AutoVisualizer>
