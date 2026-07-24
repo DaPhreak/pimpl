@@ -103,6 +103,7 @@ private:
         no_alloc(no_alloc&& S) noexcept
         : A{std::move(S)}
         {}
+        no_alloc& operator = (no_alloc const&) = delete;
     public:
         const_pointer data() const noexcept
         {
@@ -131,6 +132,7 @@ private:
         {
             this->deallocate(mData,1);
         }
+        compressed_pair& operator = (compressed_pair const&) = delete;
     public:
         constexpr const_pointer data() const noexcept
         {
