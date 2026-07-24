@@ -1,5 +1,5 @@
-#include "fast_pimpl/pimpl.h"
-#include "fast_pimpl/fast_pimpl.h"
+#include "pimpl/pimpl.h"
+#include "pimpl/fast_pimpl.h"
 #include "pimpl.h"
 
 #include <catch2/catch_test_macros.hpp>
@@ -14,9 +14,9 @@ TEST_CASE("Test fast pimpl", "[fast_pimpl]")
 {
     using T = phreak::fast_pimpl<std::string,64>;
 
-    T s{"s"};
+    T s{2,'s'};
 
-    REQUIRE( *s == "s" );
+    REQUIRE( *s == "ss" );
 
     s = "x";
 
@@ -39,9 +39,9 @@ TEST_CASE("Test pimpl", "[fast_pimpl]")
 {
     using T = phreak::pimpl<std::string>;
 
-    T s{"s"};
+    T s{2,'s'};
 
-    REQUIRE( *s == "s" );
+    REQUIRE( *s == "ss" );
 
     s = "x";
 
@@ -64,9 +64,9 @@ TEST_CASE("Test TestPimpl", "[fast_pimpl]")
 {
     using T = TestPimpl;
 
-    T s{"s"};
+    T s{"ss"};
 
-    REQUIRE( s == "s" );
+    REQUIRE( s == "ss" );
 
     s = "x";
 
