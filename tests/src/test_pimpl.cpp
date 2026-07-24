@@ -5,8 +5,6 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <string>
-#include <numeric>
-#include <algorithm>
 
 namespace {
 
@@ -32,7 +30,11 @@ TEST_CASE("Test fast pimpl", "[fast_pimpl]")
         REQUIRE( *cpy == "x" );
 
         REQUIRE( s->empty() ); // maybe (moved)...
+
+        std::swap( s, cpy );
     }
+    REQUIRE( *s == "x" );
+
 }
 
 TEST_CASE("Test pimpl", "[fast_pimpl]")
@@ -57,7 +59,9 @@ TEST_CASE("Test pimpl", "[fast_pimpl]")
         REQUIRE( *cpy == "x" );
 
         REQUIRE( s->empty() ); // maybe (moved)...
+        std::swap( s, cpy );
     }
+    REQUIRE( *s == "x" );
 }
 
 TEST_CASE("Test TestPimpl", "[fast_pimpl]")
