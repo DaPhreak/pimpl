@@ -33,8 +33,20 @@ TEST_CASE("Test fast pimpl", "[fast_pimpl]")
 
         std::swap( s, cpy );
     }
+
     REQUIRE( *s == "x" );
 
+    {
+        T cpy{ std::move( s ) };
+
+        REQUIRE( *cpy == "x" );
+
+        REQUIRE( s->empty() ); // maybe (moved)...
+
+        std::swap( s, cpy );
+    }
+
+    REQUIRE( *s == "x" );
 }
 
 TEST_CASE("Test pimpl", "[fast_pimpl]")
@@ -61,6 +73,20 @@ TEST_CASE("Test pimpl", "[fast_pimpl]")
         REQUIRE( s->empty() ); // maybe (moved)...
         std::swap( s, cpy );
     }
+
+    REQUIRE( *s == "x" );
+
+
+    {
+        T cpy{ std::move( s ) };
+
+        REQUIRE( *cpy == "x" );
+
+        REQUIRE( s->empty() ); // maybe (moved)...
+
+        std::swap( s, cpy );
+    }
+
     REQUIRE( *s == "x" );
 }
 
