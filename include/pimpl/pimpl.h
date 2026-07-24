@@ -1,5 +1,7 @@
 #pragma once
 
+#include <assert.h>
+
 #include <new>
 #include <memory>
 #include <type_traits>
@@ -25,32 +27,37 @@ public:
     {
         new(mHolder.data()) T{};
     }
+
     pimpl (pimpl const& S)
     : mHolder{S.mHolder}
     {
         new(mHolder.data()) T{*S};
     }
+
     pimpl (pimpl&& S) noexcept
     : mHolder{std::move(S.mHolder)}
     {
         new(mHolder.data()) T{std::move(*S)};
     }
+
     template <class U,class... Args,std::enable_if_t<!std::is_same_v<pimpl,std::decay_t<U>>>* = nullptr>
     explicit pimpl (U&& arg0,Args&&... args)
     {
         new(mHolder.data()) T(std::forward<U>(arg0),std::forward<Args>(args)...);
     }
+
     ~pimpl () noexcept
     {
         (**this).~T();
     }
 
-    pimpl& operator = (pimpl const& S)
+    pimpl& operator = (pimpl const& S) noexcept(std::is_nothrow_copy_assignable_v<T>)
     {
         **this=*S;
         return *this;
     }
-    pimpl& operator = (pimpl&& S) noexcept
+
+    pimpl& operator = (pimpl&& S) noexcept(std::is_nothrow_move_assignable_v<T>)
     {
         **this=std::move(*S);
         return *this;
@@ -65,20 +72,20 @@ public:
 
 public:
 
-    constexpr T const&  operator *  () const&  noexcept { return *mHolder.data(); }
-    constexpr T&        operator *  () &       noexcept { return *mHolder.data(); }
-    constexpr T const&& operator *  () const&& noexcept { return std::move(**this); }
-    constexpr T&&       operator *  () &&      noexcept { return std::move(**this); }
+    [[nodiscard]] constexpr T const&  operator *  () const&  noexcept { return *mHolder.data(); }
+    [[nodiscard]] constexpr T&        operator *  () &       noexcept { return *mHolder.data(); }
+    [[nodiscard]] constexpr T const&& operator *  () const&& noexcept { return std::move(**this); }
+    [[nodiscard]] constexpr T&&       operator *  () &&      noexcept { return std::move(**this); }
 
-    constexpr T const*  operator -> () const   noexcept { return &(**this); }
-    constexpr T*        operator -> ()         noexcept { return &(**this); }
+    [[nodiscard]] constexpr T const*  operator -> () const   noexcept { return &(**this); }
+    [[nodiscard]] constexpr T*        operator -> ()         noexcept { return &(**this); }
 
-    constexpr T const&  value       () const&  noexcept { return **this; }
-    constexpr T&        value       () &       noexcept { return **this; }
-    constexpr T const&& value       () const&& noexcept { return std::move(**this); }
-    constexpr T&&       value       () &&      noexcept { return std::move(**this); }
+    [[nodiscard]] constexpr T const&  value       () const&  noexcept { return **this; }
+    [[nodiscard]] constexpr T&        value       () &       noexcept { return **this; }
+    [[nodiscard]] constexpr T const&& value       () const&& noexcept { return std::move(**this); }
+    [[nodiscard]] constexpr T&&       value       () &&      noexcept { return std::move(**this); }
 
-    void swap (pimpl& Other) noexcept
+    void swap (pimpl& Other) noexcept(std::is_nothrow_swappable_v<T>)
     {
         std::swap(**this,*Other);
     }
@@ -87,7 +94,10 @@ private:
 
     class no_alloc: public A {
     public:
-        no_alloc() noexcept {} 
+        no_alloc() noexcept
+        {
+            assert(this->allocate(1) == this->allocate(1));
+        }
         no_alloc(no_alloc const& S) noexcept
         : A{S}
         {}
@@ -95,11 +105,11 @@ private:
         : A{std::move(S)}
         {}
     public:
-        const_pointer data() const
+        const_pointer data() const noexcept
         {
             return this->allocate(1);
         };
-        pointer data()
+        pointer data() noexcept
         {
             return this->allocate(1);
         };
@@ -123,11 +133,11 @@ private:
             this->deallocate(mData,1);
         }
     public:
-        const_pointer data() const
+        constexpr const_pointer data() const noexcept
         {
             return mData;
         };
-        pointer data()
+        constexpr pointer data() noexcept
         {
             return mData;
         };
@@ -145,7 +155,7 @@ private:
 namespace std {
 
 template <class T,class A>
-void swap (phreak::pimpl<T,A>& lhs,phreak::pimpl<T,A>& rhs) noexcept
+void swap (phreak::pimpl<T,A>& lhs,phreak::pimpl<T,A>& rhs) noexcept(std::is_nothrow_swappable_v<T>)
 {
     lhs.swap(rhs);
 }
