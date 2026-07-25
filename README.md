@@ -1,4 +1,2 @@
 # pimpl
-fast pimpl
-pimpl
-fixed allocator
+pimpl and fast pimpl
