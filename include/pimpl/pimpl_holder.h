@@ -6,6 +6,9 @@
 
 namespace phreak {
 
+struct provider_arg_t { explicit provider_arg_t() = default; };
+constexpr provider_arg_t provider_arg{};
+
 template <class T,class Provider>
 class pimpl_holder {
 public:
@@ -34,11 +37,26 @@ public:
         new(mProvider.data()) T{std::move(*S)};
     }
 
-    template <class U,class... Args,std::enable_if_t<!std::is_same_v<pimpl_holder,std::decay_t<U>>>* = nullptr>
-    explicit pimpl_holder (U&& arg0,Args&&... args) noexcept(std::is_nothrow_constructible_v<T,U,Args...> && std::is_nothrow_constructible_v<provider_type>)
+    template<class... Args,std::enable_if_t<std::is_constructible_v<T,Args...>>* = nullptr>
+    explicit pimpl_holder (Args&&... args) noexcept(std::is_nothrow_constructible_v<T,Args...> && std::is_nothrow_constructible_v<provider_type>)
     {
-        new(mProvider.data()) T(std::forward<U>(arg0),std::forward<Args>(args)...);
+        new(mProvider.data()) T(std::forward<Args>(args)...);
     }
+
+    template<class... Args,std::enable_if_t<std::is_constructible_v<T,Args...>>* = nullptr>
+    explicit pimpl_holder (provider_type const& S,Args&&... args) noexcept(std::is_nothrow_constructible_v<T,Args...> && std::is_nothrow_copy_constructible_v<provider_type>)
+    : mProvider{S}
+    {
+        new(mProvider.data()) T(std::forward<Args>(args)...);
+    }
+
+    template<class P,class... Args,std::enable_if_t<std::is_constructible_v<T,Args...>>* = nullptr>
+    explicit pimpl_holder (provider_arg_t,P&& p,Args&&... args) noexcept(std::is_nothrow_constructible_v<T,Args...> && std::is_nothrow_copy_constructible_v<provider_type>)
+    : mProvider{std::forward<P>(p)}
+    {
+        new(mProvider.data()) T(std::forward<Args>(args)...);
+    }
+
 
     ~pimpl_holder () noexcept
     {
