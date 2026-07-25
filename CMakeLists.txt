@@ -7,8 +7,11 @@ project( pimpl
 )
 
 set( HEADERS
+    include/pimpl/dynamic_provider.h
     include/pimpl/fast_pimpl.h
+    include/pimpl/fixed_provider.h
     include/pimpl/pimpl.h
+    include/pimpl/pimpl_holder.h
 )
 
 add_library( ${PROJECT_NAME} INTERFACE

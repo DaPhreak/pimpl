@@ -2,21 +2,21 @@
 
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
 
-<Type Name="phreak::pimpl&lt;*&gt;">
-  <DisplayString>{mHolder}</DisplayString>
+<Type Name="phreak::pimpl_holder&lt;*&gt;">
+  <DisplayString>{mProvider}</DisplayString>
   <Expand>
-    <Item Name="[value]">mHolder</Item>
+    <Item Name="[value]">mProvider</Item>
   </Expand>
 </Type>
 
-<Type Name="phreak::pimpl&lt;*&gt;::storage">
+<Type Name="phreak::fixed_provider&lt;*&gt;">
   <DisplayString>{*($T1*)(mStorage)}</DisplayString>
   <Expand>
     <Item Name="[value]">*($T1*)(mStorage)</Item>
   </Expand>
 </Type>
 
-<Type Name="phreak::pimpl&lt;*&gt;::compressed_pair">
+<Type Name="phreak::dynamic_provider&lt;*&gt;">
   <DisplayString>{*mData}</DisplayString>
   <Expand>
     <Item Name="[value]">*mData</Item>
