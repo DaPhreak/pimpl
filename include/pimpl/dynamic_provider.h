@@ -15,14 +15,14 @@ public:
 
 public:
 
-    dynamic_provider() 
+    dynamic_provider() noexcept(is_nothrow_alloc)
     : mData{this->allocate(1)}
     {}
-    dynamic_provider(dynamic_provider const& S)
+    dynamic_provider(dynamic_provider const& S) noexcept(is_nothrow_alloc)
     : Alloc{S}
     , mData{this->allocate(1)}
     {}
-    dynamic_provider(dynamic_provider&& S)
+    dynamic_provider(dynamic_provider&& S) noexcept(is_nothrow_alloc)
     : Alloc{std::move(S)}
     , mData{this->allocate(1)}
     {}
@@ -44,7 +44,7 @@ public:
     };
 
 private:
-
+    constexpr static bool is_nothrow_alloc{std::is_nothrow_invocable_v<decltype(std::declval<Alloc>().allocate(1))>};
     pointer mData{};
 
 };
