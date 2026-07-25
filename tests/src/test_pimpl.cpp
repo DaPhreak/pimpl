@@ -10,7 +10,7 @@ namespace {
 
 TEST_CASE("Test fast pimpl", "[fast_pimpl]")
 {
-    using T = phreak::fast_pimpl<std::string,64>;
+    using T = phreak::fast_pimpl<std::string,40>;
 
     T s{2,'s'};
 

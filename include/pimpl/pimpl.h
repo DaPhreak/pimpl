@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cassert>
 #include <new>
 #include <memory>
 #include <type_traits>
@@ -8,19 +7,21 @@
 namespace phreak {
 
 template <class T, class dummy = void>
-struct enable_fixed_allocator_t: public std::false_type{};
+struct is_allocator_t: public std::false_type{};
 
 template <class T>
-struct enable_fixed_allocator_t<T,std::void_t<typename T::allocation_free>>: public std::true_type{};
+struct is_allocator_t<T,std::void_t<decltype(std::declval<T&>().allocate(1))>>: public std::true_type{};
 
-template <class T,class A = std::allocator<T>>
+template <class T,class Alloc = std::allocator<T>>
 class pimpl {
 public:
 
-    using value_type = T;
-    using allocator_type = A;
-    using pointer = T*;
-    using const_pointer	= T const*;
+    using value_type      = T;
+    using allocator_type  = Alloc;
+    using pointer         = T*;
+    using const_pointer	  = T const*;
+    using reference       = T&;
+    using const_reference = T const&;
 
     pimpl () noexcept(std::is_nothrow_constructible_v<T> && std::is_nothrow_constructible_v<holder_t>)
     {
@@ -91,41 +92,41 @@ public:
 
 private:
 
-    class no_alloc: private A {
+    class storage {
     public:
-        no_alloc() noexcept
+        constexpr storage() noexcept = default;
+        constexpr storage(storage const&) noexcept
+        {}
+        ~storage()
         {
-            assert(data() == data());
+            static_assert(sizeof(value_type) <= sizeof(Alloc),"size of value_type is too big!");
+            static_assert(alignof(value_type) <= alignof(Alloc),"alignment of value_type is too big!");
         }
-        no_alloc(no_alloc const& S) noexcept
-        : A{S}
-        {}
-        no_alloc(no_alloc&& S) noexcept
-        : A{std::move(S)}
-        {}
-        no_alloc& operator = (no_alloc const&) = delete;
+        storage& operator = (storage const&) = delete;
     public:
-        const_pointer data() const noexcept
+        constexpr const_pointer data() const noexcept
         {
-            return this->allocate(1);
+            return std::launder(reinterpret_cast<const_pointer>(mStorage));
         };
-        pointer data() noexcept
+        constexpr pointer data() noexcept
         {
-            return this->allocate(1);
+            return std::launder(reinterpret_cast<pointer>(mStorage));
         };
+    private:
+        alignas(alignof(Alloc)) std::byte mStorage[sizeof(Alloc)];
     };
 
-    class compressed_pair: private A {
+    class compressed_pair: private Alloc {
     public:
         compressed_pair() 
         : mData{this->allocate(1)}
         {}
         compressed_pair(compressed_pair const& S)
-        : A{S}
+        : Alloc{S}
         , mData{this->allocate(1)}
         {}
         compressed_pair(compressed_pair&& S)
-        : A{std::move(S)}
+        : Alloc{std::move(S)}
         , mData{this->allocate(1)}
         {}
         ~compressed_pair()
@@ -146,7 +147,7 @@ private:
         pointer mData{};
     };
 
-    using holder_t = std::conditional_t<enable_fixed_allocator_t<A>::value,no_alloc,compressed_pair>;
+    using holder_t = std::conditional_t<is_allocator_t<Alloc>::value,compressed_pair,storage>;
 
     holder_t mHolder{};
 };
@@ -155,8 +156,8 @@ private:
 
 namespace std {
 
-template <class T,class A>
-void swap (phreak::pimpl<T,A>& lhs,phreak::pimpl<T,A>& rhs) noexcept(std::is_nothrow_swappable_v<T>)
+template <class T,class Alloc>
+void swap (phreak::pimpl<T,Alloc>& lhs,phreak::pimpl<T,Alloc>& rhs) noexcept(std::is_nothrow_swappable_v<T>)
 {
     lhs.swap(rhs);
 }

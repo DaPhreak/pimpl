@@ -9,7 +9,7 @@
   </Expand>
 </Type>
 
-<Type Name="phreak::fixed_allocator&lt;*&gt;">
+<Type Name="phreak::pimpl&lt;*&gt;::storage">
   <DisplayString>{*($T1*)(mStorage)}</DisplayString>
   <Expand>
     <Item Name="[value]">*($T1*)(mStorage)</Item>

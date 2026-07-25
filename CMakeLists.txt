@@ -8,7 +8,6 @@ project( pimpl
 
 set( HEADERS
     include/pimpl/fast_pimpl.h
-    include/pimpl/fixed_allocator.h
     include/pimpl/pimpl.h
 )
 
