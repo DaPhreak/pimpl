@@ -3,6 +3,8 @@
 #include "pimpl_holder.h"
 #include "dynamic_provider.h"
 
+#include <memory>
+
 namespace phreak {
 
 template <class T,class Alloc = std::allocator<T>>
