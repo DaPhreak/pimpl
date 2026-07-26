@@ -5,6 +5,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <string>
+#include <memory_resource>
 
 namespace {
 
@@ -63,6 +64,17 @@ TEST_CASE("Test pimpl", "[fast_pimpl]")
 
     test(s);
 }
+
+TEST_CASE("Test pmr pimpl", "[fast_pimpl]")
+{
+    using T = phreak::pimpl<std::string,std::pmr::polymorphic_allocator<std::string>>;
+    std::pmr::synchronized_pool_resource mem{};
+
+    T s{&mem,2,'s'};
+
+    test(s);
+}
+
 
 TEST_CASE("Test TestPimpl", "[fast_pimpl]")
 {
