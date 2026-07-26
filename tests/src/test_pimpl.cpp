@@ -9,14 +9,16 @@
 
 namespace {
 
+constexpr std::string_view assigned{ "Hello, this will be on the heap!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"};
+
 template<class T>
 void test(T& s)
 {
     REQUIRE( s == "ss" );
 
-    s = "x";
+    s = assigned;
 
-    REQUIRE( s == "x" );
+    REQUIRE(( s == assigned ));
 
     {
         T cpy{ s };
@@ -25,26 +27,26 @@ void test(T& s)
 
         cpy = std::move( s );
 
-        REQUIRE( cpy == "x" );
+        REQUIRE(( cpy == assigned ));
 
         REQUIRE( s == "" ); // maybe (moved)...
 
         std::swap( s, cpy );
     }
 
-    REQUIRE( s == "x" );
+    REQUIRE(( s == assigned ));
 
     {
         T cpy{ std::move( s ) };
 
-        REQUIRE( cpy == "x" );
+        REQUIRE(( cpy == assigned ));
 
         REQUIRE( s == "" ); // maybe (moved)...
 
         std::swap( s, cpy );
     }
 
-    REQUIRE( s == "x" );
+    REQUIRE(( s == assigned ));
 }
 
 TEST_CASE("Test fast pimpl", "[pimpl]")
@@ -74,7 +76,6 @@ TEST_CASE("Test pmr pimpl", "[pimpl]")
 
     test(s);
 }
-
 
 TEST_CASE("Test TestPimpl", "[pimpl]")
 {
