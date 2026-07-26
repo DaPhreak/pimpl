@@ -240,13 +240,4 @@ void swap (phreak::pimpl_holder<T,Provider>& lhs,phreak::pimpl_holder<T,Provider
     lhs.swap(rhs);
 }
 
-template <class T,class Provider>
-struct hash<phreak::pimpl_holder<T,Provider>> {
-    std::size_t operator()(phreak::pimpl_holder<T,Provider> const& S) const noexcept
-    {
-        return std::hash<T>{}(*S);
-    }
-};
-
-
 } // namespace std
