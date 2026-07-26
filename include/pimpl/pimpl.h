@@ -8,6 +8,6 @@
 namespace phreak {
 
 template <class T,class Alloc = std::allocator<T>>
-using pimpl = pimpl_holder<T,dynamic_provider<Alloc>>;
+using pimpl = pimpl_holder<dynamic_provider<Alloc>>;
 
 } //namespace phreak

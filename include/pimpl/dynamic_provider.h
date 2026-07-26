@@ -29,10 +29,6 @@ public:
     : Alloc{std::forward<Args>(args)...}
     {}
 
-    ~dynamic_provider()
-    {
-        this->deallocate(mData,1);
-    }
     dynamic_provider& operator = (dynamic_provider const&) = delete;
 
 public:
@@ -45,6 +41,12 @@ public:
     {
         return mData;
     };
+
+    void destroy()
+    {
+        mData->~value_type();
+        this->deallocate(mData,1);
+    }
 
 private:
 

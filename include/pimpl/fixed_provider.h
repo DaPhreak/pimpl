@@ -35,6 +35,11 @@ public:
         return std::launder(reinterpret_cast<pointer>(mStorage));
     };
 
+    void destroy()
+    {
+        data()->~value_type();
+    }
+
 private:
 
     alignas(Align) std::byte mStorage[MaxSpace];
