@@ -47,7 +47,7 @@ void test(T& s)
     REQUIRE( s == "x" );
 }
 
-TEST_CASE("Test fast pimpl", "[fast_pimpl]")
+TEST_CASE("Test fast pimpl", "[pimpl]")
 {
     using T = phreak::fast_pimpl<std::string,40>;
 
@@ -56,7 +56,7 @@ TEST_CASE("Test fast pimpl", "[fast_pimpl]")
     test(s);
 }
 
-TEST_CASE("Test pimpl", "[fast_pimpl]")
+TEST_CASE("Test pimpl", "[pimpl]")
 {
     using T = phreak::pimpl<std::string>;
 
@@ -65,7 +65,7 @@ TEST_CASE("Test pimpl", "[fast_pimpl]")
     test(s);
 }
 
-TEST_CASE("Test pmr pimpl", "[fast_pimpl]")
+TEST_CASE("Test pmr pimpl", "[pimpl]")
 {
     using T = phreak::pimpl<std::string,std::pmr::polymorphic_allocator<std::string>>;
     std::pmr::synchronized_pool_resource mem{};
@@ -76,7 +76,7 @@ TEST_CASE("Test pmr pimpl", "[fast_pimpl]")
 }
 
 
-TEST_CASE("Test TestPimpl", "[fast_pimpl]")
+TEST_CASE("Test TestPimpl", "[pimpl]")
 {
     using T = TestPimpl;
 
