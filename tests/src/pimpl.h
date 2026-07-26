@@ -19,7 +19,7 @@ public:
 
 private:
     class Impl;
-    phreak::fast_pimpl<Impl,48> mImpl;
+    phreak::fast_pimpl<Impl,40> mImpl;
 };
 
 
