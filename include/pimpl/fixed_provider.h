@@ -20,7 +20,7 @@ public:
         static_assert(sizeof(value_type) <= MaxSpace,"size of value_type is too big!");
         static_assert(alignof(value_type) <= Align,"alignment of value_type is too big!");
         if constexpr(!std::is_void_v<Destroyer>) {
-            Destroyer::register_type<T>();
+            Destroyer::template register_type<T>();
         }
     }
     constexpr fixed_provider(fixed_provider const&) noexcept {}

@@ -66,7 +66,7 @@ private:
     static void register_destroy() noexcept
     {
         if constexpr(!std::is_void_v<Destroyer>) {
-            Destroyer::register_destroy<dynamic_provider>([](void* Ressource)
+            Destroyer::template register_destroy<dynamic_provider>([](void* Ressource)
             {
                 auto provider{ static_cast<dynamic_provider*>(Ressource) };
                 auto data{provider->data()};
