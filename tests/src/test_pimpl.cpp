@@ -73,5 +73,4 @@ TEST_CASE("Test TestPimpl", "[fast_pimpl]")
     test(s);
 }
 
-
 } // ::

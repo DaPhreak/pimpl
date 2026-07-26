@@ -34,7 +34,6 @@ TestPimpl& TestPimpl::operator = ( const std::string_view s )
     return *this;
 }
 
-
 TestPimpl::operator std::string_view () const noexcept
 {
     return *mImpl;
