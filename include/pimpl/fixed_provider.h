@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <new>
 
 namespace phreak {
 
@@ -27,11 +28,11 @@ public:
 
     constexpr const_pointer data() const noexcept
     {
-       return reinterpret_cast<const_pointer>(mStorage);
+       return std::launder(reinterpret_cast<const_pointer>(mStorage));
     };
     constexpr pointer data() noexcept
     {
-        return reinterpret_cast<pointer>(mStorage);
+        return std::launder(reinterpret_cast<pointer>(mStorage));
     };
 
 private:

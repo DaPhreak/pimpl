@@ -92,8 +92,8 @@ public:
 
 public:
 
-    [[nodiscard]] constexpr T const&  operator *  () const&  noexcept { return *std::launder(mProvider.data()); }
-    [[nodiscard]] constexpr T&        operator *  () &       noexcept { return *std::launder(mProvider.data()); }
+    [[nodiscard]] constexpr T const&  operator *  () const&  noexcept { return *mProvider.data(); }
+    [[nodiscard]] constexpr T&        operator *  () &       noexcept { return *mProvider.data(); }
     [[nodiscard]] constexpr T const&& operator *  () const&& noexcept { return std::move(**this); }
     [[nodiscard]] constexpr T&&       operator *  () &&      noexcept { return std::move(**this); }
 
