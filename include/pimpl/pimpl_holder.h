@@ -121,6 +121,115 @@ private:
 
 };
 
+
+template <class T,class Provider>
+[[nodiscard]] bool operator == (pimpl_holder<T,Provider> const& lhs,pimpl_holder<T,Provider> const& rhs) noexcept
+{
+    return *lhs == *rhs;
+}
+
+template <class T,class Provider,class U>
+[[nodiscard]] bool operator == (pimpl_holder<T,Provider> const& lhs,U const& rhs) noexcept
+{
+    return *lhs == rhs;
+}
+
+template <class T,class Provider,class U>
+[[nodiscard]] bool operator == (U const& lhs,pimpl_holder<T,Provider> const& rhs) noexcept
+{
+    return lhs == *rhs;
+}
+
+template <class T,class Provider>
+[[nodiscard]] bool operator != (pimpl_holder<T,Provider> const& lhs,pimpl_holder<T,Provider> const& rhs) noexcept
+{
+    return *lhs != *rhs;
+}
+
+template <class T,class Provider,class U>
+[[nodiscard]] bool operator != (pimpl_holder<T,Provider> const& lhs,U const& rhs) noexcept
+{
+    return *lhs != rhs;
+}
+
+template <class T,class Provider,class U>
+[[nodiscard]] bool operator != (U const& lhs,pimpl_holder<T,Provider> const& rhs) noexcept
+{
+    return lhs != *rhs;
+}
+
+template <class T,class Provider>
+[[nodiscard]] bool operator < (pimpl_holder<T,Provider> const& lhs,pimpl_holder<T,Provider> const& rhs) noexcept
+{
+    return *lhs < *rhs;
+}
+
+template <class T,class Provider,class U>
+[[nodiscard]] bool operator < (pimpl_holder<T,Provider> const& lhs,U const& rhs) noexcept
+{
+    return *lhs < rhs;
+}
+
+template <class T,class Provider,class U>
+[[nodiscard]] bool operator < (U const& lhs,pimpl_holder<T,Provider> const& rhs) noexcept
+{
+    return lhs < *rhs;
+}
+
+template <class T,class Provider>
+[[nodiscard]] bool operator <= (pimpl_holder<T,Provider> const& lhs,pimpl_holder<T,Provider> const& rhs) noexcept
+{
+    return *lhs <= *rhs;
+}
+
+template <class T,class Provider,class U>
+[[nodiscard]] bool operator <= (pimpl_holder<T,Provider> const& lhs,U const& rhs) noexcept
+{
+    return *lhs <= rhs;
+}
+
+template <class T,class Provider,class U>
+[[nodiscard]] bool operator <= (U const& lhs,pimpl_holder<T,Provider> const& rhs) noexcept
+{
+    return lhs <= *rhs;
+}
+
+template <class T,class Provider>
+[[nodiscard]] bool operator > (pimpl_holder<T,Provider> const& lhs,pimpl_holder<T,Provider> const& rhs) noexcept
+{
+    return *lhs > *rhs;
+}
+
+template <class T,class Provider,class U>
+[[nodiscard]] bool operator > (pimpl_holder<T,Provider> const& lhs,U const& rhs) noexcept
+{
+    return *lhs > rhs;
+}
+
+template <class T,class Provider,class U>
+[[nodiscard]] bool operator > (U const& lhs,pimpl_holder<T,Provider> const& rhs) noexcept
+{
+    return lhs > *rhs;
+}
+
+template <class T,class Provider>
+[[nodiscard]] bool operator >= (pimpl_holder<T,Provider> const& lhs,pimpl_holder<T,Provider> const& rhs) noexcept
+{
+    return *lhs >= *rhs;
+}
+
+template <class T,class Provider,class U>
+[[nodiscard]] bool operator >= (pimpl_holder<T,Provider> const& lhs,U const& rhs) noexcept
+{
+    return *lhs >= rhs;
+}
+
+template <class T,class Provider,class U>
+[[nodiscard]] bool operator >= (U const& lhs,pimpl_holder<T,Provider> const& rhs) noexcept
+{
+    return lhs >= *rhs;
+}
+
 } //namespace phreak
 
 namespace std {
@@ -130,5 +239,14 @@ void swap (phreak::pimpl_holder<T,Provider>& lhs,phreak::pimpl_holder<T,Provider
 {
     lhs.swap(rhs);
 }
+
+template <class T,class Provider>
+struct hash<phreak::pimpl_holder<T,Provider>> {
+    std::size_t operator()(phreak::pimpl_holder<T,Provider> const& S) const noexcept
+    {
+        return std::hash<T>{}(*S);
+    }
+};
+
 
 } // namespace std
