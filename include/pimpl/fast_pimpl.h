@@ -6,6 +6,6 @@
 namespace phreak {
 
 template <class T,size_t MaxSpace,size_t Align=alignof(std::max_align_t)>
-using fast_pimpl = pimpl_holder<fixed_provider<T,MaxSpace,Align>>;
+using fast_pimpl = pimpl_holder<detail::fixed_provider<T,MaxSpace,Align>>;
 
 } //namespace phreak

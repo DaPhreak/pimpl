@@ -9,14 +9,14 @@
   </Expand>
 </Type>
 
-<Type Name="phreak::fixed_provider&lt;*&gt;">
+<Type Name="phreak::detail::fixed_provider&lt;*&gt;">
   <DisplayString>{*($T1*)(mStorage)}</DisplayString>
   <Expand>
     <Item Name="[value]">*($T1*)(mStorage)</Item>
   </Expand>
 </Type>
 
-<Type Name="phreak::dynamic_provider&lt;*&gt;">
+<Type Name="phreak::detail::dynamic_provider&lt;*&gt;">
   <DisplayString>{*mData}</DisplayString>
   <Expand>
     <Item Name="[value]">*mData</Item>
