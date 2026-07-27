@@ -6,7 +6,7 @@ class TestPimpl::Impl{
 public:
     Impl() = default;
     Impl( const std::string_view s )
-    : mString{ s } {}
+    : mString{s} {}
     Impl& operator = ( const std::string_view s )
     {
         mString = s;
@@ -25,7 +25,7 @@ TestPimpl& TestPimpl::operator = (TestPimpl const&) = default;
 TestPimpl& TestPimpl::operator = (TestPimpl&&) noexcept = default;
 
 TestPimpl::TestPimpl( const std::string_view s )
-: mImpl{ s }
+: mImpl{s}
 {}
 
 TestPimpl& TestPimpl::operator = ( const std::string_view s )
