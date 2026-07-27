@@ -1,4 +1,5 @@
 #include "pimpl/fast_pimpl.h"
+#include "pimpl/type_erasure.h"
 
 #include <string_view>
 
@@ -8,7 +9,7 @@ public:
     TestPimpl( const std::string_view s );
     TestPimpl(TestPimpl const&);
     TestPimpl(TestPimpl&&) noexcept;
-    ~TestPimpl() noexcept;
+    //~TestPimpl() noexcept;
     TestPimpl& operator = (TestPimpl const&);
     TestPimpl& operator = (TestPimpl&&) noexcept;
     TestPimpl& operator = ( const std::string_view s );
@@ -19,7 +20,8 @@ public:
 
 private:
     class Impl;
-    phreak::fast_pimpl<Impl,40> mImpl;
+    using Impl_t = phreak::pimpl_holder<phreak::detail::fixed_provider<Impl,40,8,phreak::detail::type_erasure>>;
+    Impl_t mImpl;
 };
 
 

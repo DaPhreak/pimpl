@@ -1,13 +1,17 @@
 #pragma once
 
+#include "provider.h"
+
 #include <type_traits>
 
 namespace phreak::detail {
 
-template <class Alloc,class Destroyer=void>
-class dynamic_provider: private Alloc {
+template <class Alloc,class Eraser=void>
+class dynamic_provider: public provider<dynamic_provider<Alloc,Eraser>>, private Alloc {
 public:
-
+    
+    using eraser_type    = Eraser;
+    using base_type      = provider<dynamic_provider<Alloc,Eraser>>;
     using allocator_type = Alloc;
     using value_type     = typename Alloc::value_type;
     using pointer        = value_type*;
@@ -20,23 +24,29 @@ public:
         register_destroy();
     }
     dynamic_provider(dynamic_provider const& S) noexcept(is_nothrow_alloc && std::is_nothrow_copy_constructible_v<Alloc>)
-    : Alloc{S}
-    {
-        register_destroy();
-    }
+    : base_type{S}
+    , Alloc{S}
+    {}
     dynamic_provider(dynamic_provider&& S) noexcept(is_nothrow_alloc && std::is_nothrow_move_constructible_v<Alloc>)
-    : Alloc{std::move(S)}
-    {
-        register_destroy();
-    }
+    : base_type{S}
+    , Alloc{std::move(S)}
+    {}
     template<class... Args,std::enable_if_t<std::is_constructible_v<Alloc,Args...>>* = nullptr>
-    dynamic_provider(Args&&... args) noexcept(is_nothrow_alloc && std::is_nothrow_constructible_v<Alloc,Args...>)
+    explicit dynamic_provider(Args&&... args) noexcept(is_nothrow_alloc && std::is_nothrow_constructible_v<Alloc,Args...>)
     : Alloc{std::forward<Args>(args)...}
     {
         register_destroy();
     }
 
-    dynamic_provider& operator = (dynamic_provider const&) = delete;
+    ~dynamic_provider()
+    {
+        if constexpr(!std::is_void_v<Eraser>) {
+           Eraser::destroy(*this);
+        } else {
+            mData->~value_type();
+            this->deallocate(mData,1);
+        }
+    }
 
 public:
 
@@ -49,30 +59,19 @@ public:
         return mData;
     };
 
-    void destroy()
-    {
-        if constexpr(!std::is_void_v<Destroyer>) {
-           Destroyer::destroy(this);
-        } else {
-            mData->~value_type();
-            this->deallocate(mData,1);
-        }
-    }
-
 private:
 
     constexpr static bool is_nothrow_alloc{std::is_nothrow_invocable_v<decltype(std::declval<Alloc>().allocate(1))>};
 
     static void register_destroy() noexcept
     {
-        if constexpr(!std::is_void_v<Destroyer>) {
-            Destroyer::template register_destroy<dynamic_provider>([](void* Ressource)
+        if constexpr(!std::is_void_v<Eraser>) {
+            Eraser::template register_destroy<dynamic_provider>([](dynamic_provider& provider)
             {
-                auto provider{ static_cast<dynamic_provider*>(Ressource) };
-                auto data{provider->data()};
+                auto data{provider.data()};
 
                 data->~value_type();
-                provider->deallocate(data,1);
+                provider.deallocate(data,1);
             });
         }
     }

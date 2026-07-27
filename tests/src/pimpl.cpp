@@ -20,7 +20,7 @@ private:
 TestPimpl::TestPimpl() = default;
 TestPimpl::TestPimpl(TestPimpl const&) = default;
 TestPimpl::TestPimpl(TestPimpl&&) noexcept = default;
-TestPimpl::~TestPimpl() noexcept = default;
+//TestPimpl::~TestPimpl() noexcept = default;
 TestPimpl& TestPimpl::operator = (TestPimpl const&) = default;
 TestPimpl& TestPimpl::operator = (TestPimpl&&) noexcept = default;
 
