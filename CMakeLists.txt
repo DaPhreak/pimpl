@@ -7,7 +7,6 @@ project( pimpl
 )
 
 set( HEADERS
-    include/pimpl/destroy.h
     include/pimpl/dynamic_provider.h
     include/pimpl/fast_pimpl.h
     include/pimpl/fixed_provider.h

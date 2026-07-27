@@ -66,7 +66,7 @@ public:
 
     ~pimpl_holder () noexcept
     {
-        mProvider.destroy();
+        (**this).~value_type();
     }
 
     //template <class U = value_type,typename = std::enable_if_t<std::is_copy_assignable_v<U>>> -> needs concepts
