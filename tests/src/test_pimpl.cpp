@@ -72,7 +72,7 @@ TEST_CASE("Test pmr pimpl", "[pimpl]")
     using T = phreak::pimpl<std::string,std::pmr::polymorphic_allocator<std::string>>;
     std::pmr::synchronized_pool_resource mem{};
 
-    T s{&mem,2,'s'};
+    T s{phreak::provider_arg,&mem,2,'s'};
 
     test(s);
 }

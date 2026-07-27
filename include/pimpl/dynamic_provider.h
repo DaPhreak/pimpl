@@ -24,7 +24,7 @@ public:
     : Alloc{std::move(S)}
     {}
     template<class... Args,std::enable_if_t<std::is_constructible_v<Alloc,Args...>>* = nullptr>
-    dynamic_provider(Args&&... args) noexcept(is_nothrow_alloc && std::is_nothrow_constructible_v<Alloc,Args...>)
+    explicit dynamic_provider(Args&&... args) noexcept(is_nothrow_alloc && std::is_nothrow_constructible_v<Alloc,Args...>)
     : Alloc{std::forward<Args>(args)...}
     {}
 

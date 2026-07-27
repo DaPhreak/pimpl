@@ -50,13 +50,6 @@ public:
         new(mProvider.data()) value_type(std::forward<Args>(args)...);
     }
 
-    template<class... Args,typename = std::enable_if_t<std::is_constructible_v<value_type,Args...>>>
-    explicit pimpl_holder (provider_type const& S,Args&&... args) noexcept(std::is_nothrow_constructible_v<value_type,Args...> && std::is_nothrow_copy_constructible_v<provider_type>)
-    : mProvider{S}
-    {
-        new(mProvider.data()) value_type(std::forward<Args>(args)...);
-    }
-
     template<class P,class... Args,typename = std::enable_if_t<std::is_constructible_v<value_type,Args...>>>
     explicit pimpl_holder (provider_arg_t,P&& p,Args&&... args) noexcept(std::is_nothrow_constructible_v<value_type,Args...> && std::is_nothrow_copy_constructible_v<provider_type>)
     : mProvider{std::forward<P>(p)}
