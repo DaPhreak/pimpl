@@ -44,10 +44,10 @@ public:
         new(mProvider.data()) value_type{std::move(*S)};
     }
 
-    template<class... Args,typename = std::enable_if_t<std::is_constructible_v<value_type,Args...>>>
-    explicit pimpl_holder (Args&&... args) noexcept(std::is_nothrow_constructible_v<value_type,Args...> && std::is_nothrow_constructible_v<provider_type>)
+    template <class U,class... Args,typename = std::enable_if_t<std::is_constructible_v<value_type,U,Args...> && !std::is_base_of_v<pimpl_holder,std::decay_t<U>>>>
+    explicit pimpl_holder (U&& arg0,Args&&... args) noexcept(std::is_nothrow_constructible_v<value_type,U,Args...> && std::is_nothrow_constructible_v<provider_type>)
     {
-        new(mProvider.data()) value_type(std::forward<Args>(args)...);
+        new(mProvider.data()) value_type(std::forward<U>(arg0),std::forward<Args>(args)...);
     }
 
     template<class P,class... Args,typename = std::enable_if_t<std::is_constructible_v<value_type,Args...>>>
@@ -78,7 +78,7 @@ public:
         return *this;
     }
 
-    template <class U = value_type,typename = std::enable_if_t<std::is_assignable_v<value_type,U>>>
+    template <class U = value_type,typename = std::enable_if_t<std::is_assignable_v<value_type,U> && !std::is_base_of_v<pimpl_holder,std::decay_t<U>>>>
     pimpl_holder& operator = (U&& S) noexcept(std::is_nothrow_assignable_v<value_type,U>)
     {
         **this=std::forward<U>(S);
