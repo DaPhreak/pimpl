@@ -9,9 +9,9 @@ template <class T,size_t MaxSpace,size_t Align>
 class fixed_provider {
 public:
 
-    using value_type      = T;
-    using pointer         = T*;
-    using const_pointer	  = T const*;
+    using value_type    = T;
+    using pointer       = T*;
+    using const_pointer = T const*;
 
 public:
 
@@ -27,7 +27,7 @@ public:
 
     constexpr const_pointer data() const noexcept
     {
-       return std::launder(reinterpret_cast<const_pointer>(mStorage));
+        return std::launder(reinterpret_cast<const_pointer>(mStorage));
     };
     constexpr pointer data() noexcept
     {
